@@ -19,7 +19,7 @@ libs: $(LIB_DIR) editline
 # ======== editline ==============
 LIB_editline = $(LIB_DIR)/editline
 LIB_editline_target = $(PWD)/$(LIB_DIR)/target
-LIB_editline_build = $(LIB_editline)/.BUILD_SUCCESS
+LIB_editline_build = $(LIB_editline_target)/.editline_BUILD_SUCCESS
 
 editline: $(LIB_editline) $(LIB_editline_build)
 	@echo lib: editline [over]

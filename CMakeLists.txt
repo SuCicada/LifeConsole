@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.16)
 project(LifeConsole)
 
 set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_VERBOSE_MAKEFILE ON)
+# 开启 cmake 详细信息
+#set(CMAKE_VERBOSE_MAKEFILE ON)
 
 file(GLOB editline_SRC
         editline/**/**
@@ -49,6 +50,8 @@ endmacro()
 #endif()
 
 #message(STATUS "****************** LIB MODULES END *******************")
+set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
+
 set(LIB_target ${CMAKE_SOURCE_DIR}/lib/target)
 #message(${LIB_target})
 #add_library(STATIC editline)
@@ -67,11 +70,4 @@ add_executable(${PROJECT_NAME}
         )
 
 # -l
-target_link_libraries(${PROJECT_NAME} editline)
-
-#add_custom_command(
-#        TARGET ${PROJECT_NAME}
-#        PRE_BUILD
-#        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/
-#        COMMAND touch 111111
-#)
+target_link_libraries(${PROJECT_NAME} libeditline.a)
