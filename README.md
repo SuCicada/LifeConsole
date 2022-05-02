@@ -25,6 +25,33 @@ sudo apt-get install libtool
 - [ ] today: food
 - [ ] today: sleep 
 - [ ] free talk
+
+```
+I : 我现在要做什么
+Su: 睡觉
+
+I : 我现在要做什么
+Su: 现在是吃饭时间段, 预计用时 20m, 要开始吃饭吗
+
+I : 我今天的计划
+Su: 1. xxx 2.xxx
+
+I : 突发恶疾
+Su: 应急措施: 1.xxx 2.xxxxx
+
+Su: 可能存在久坐情况, 要执行活动指令吗
+I : y
+Su: 站起来, 去喝水(2m), 脖子运动4*8(5m). 开始执行清告我
+I : y
+
+I : 我要去喝水了
+Su: 已记录, 我相信你
+I : 我真的去睡觉了
+Su: 已记录, 我相信你
+I : 我去做运动
+Su: 已记录, 我相信你
+```
+
 ```bash
 sudo apt-get install libedit-dev
 cmake -G 'CodeBlocks - Unix Makefiles' -B cmake-build-debug

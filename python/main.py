@@ -1,73 +1,60 @@
 import cmd, sys
-from turtle import *
+import os
+from pathlib import Path
+import readline
+from LifeConsole import LifeConsole
 
-class TurtleShell(cmd.Cmd):
-    intro = 'Welcome to the turtle shell.   Type help or ? to list commands.\n'
-    prompt = '(turtle) '
-    file = None
 
-    # ----- basic turtle commands -----
-    def do_forward(self, arg):
-        'Move the turtle forward by the specified distance:  FORWARD 10'
-        forward(*parse(arg))
-    def do_right(self, arg):
-        'Turn turtle right by given number of degrees:  RIGHT 20'
-        right(*parse(arg))
-    def do_left(self, arg):
-        'Turn turtle left by given number of degrees:  LEFT 90'
-        left(*parse(arg))
-    def do_goto(self, arg):
-        'Move turtle to an absolute position with changing orientation.  GOTO 100 200'
-        goto(*parse(arg))
-    def do_home(self, arg):
-        'Return turtle to the home position:  HOME'
-        home()
-    def do_circle(self, arg):
-        'Draw circle with given radius an options extent and steps:  CIRCLE 50'
-        circle(*parse(arg))
-    def do_position(self, arg):
-        'Print the current turtle position:  POSITION'
-        print('Current position is %d %d\n' % position())
-    def do_heading(self, arg):
-        'Print the current turtle heading in degrees:  HEADING'
-        print('Current heading is %d\n' % (heading(),))
-    def do_color(self, arg):
-        'Set the color:  COLOR BLUE'
-        color(arg.lower())
-    def do_undo(self, arg):
-        'Undo (repeatedly) the last turtle action(s):  UNDO'
-    def do_reset(self, arg):
-        'Clear the screen and return turtle to center:  RESET'
-        reset()
-    def do_bye(self, arg):
-        'Stop recording, close the turtle window, and exit:  BYE'
-        print('Thank you for using Turtle')
-        self.close()
-        bye()
+class LifeConsoleCmd(cmd.Cmd, LifeConsole):
+    intro = '祂有很多名字. 有人叫祂SuCicada. 有人叫祂蘇曉蝉\n'
+    prompt = 'I  Say: '
+
+    def precmd(self, line):
+        return line
+
+    def do_EOF(self, line):
+        print("bye bye")
         return True
 
-    # ----- record and playback -----
-    def do_record(self, arg):
-        'Save future commands to filename:  RECORD rose.cmd'
-        self.file = open(arg, 'w')
-    def do_playback(self, arg):
-        'Playback commands from a file:  PLAYBACK rose.cmd'
-        self.close()
-        with open(arg) as f:
-            self.cmdqueue.extend(f.read().splitlines())
-    def precmd(self, line):
-        line = line.lower()
-        if self.file and 'playback' not in line:
-            print(line, file=self.file)
-        return line
-    def close(self):
-        if self.file:
-            self.file.close()
-            self.file = None
+    completenames_ignore = ['EOF', 'help']
 
-def parse(arg):
-    'Convert a series of zero or more numbers to an argument tuple'
-    return tuple(map(int, arg.split()))
+    def completenames(self, text, *args) -> list:
+        res = super().completenames(text, args)
+        return [a
+                for a in res
+                if a not in self.completenames_ignore]
+
+    def cmdloop(self, *args):
+        try:
+            super().cmdloop()
+        except KeyboardInterrupt:
+            self.intro = " "
+            self.cmdloop()
+
+    def onecmd(self, line):
+        command, arg, line = self.parseline(line)
+        try:
+            func = getattr(LifeConsole, command)
+        except AttributeError:
+            return super().onecmd(line)
+        return func(arg)
+
+
+HISTORY = f"{str(Path.home())}/.life-console-history"
+
+
+def main():
+    if not os.path.exists(HISTORY):
+        open(HISTORY, 'w').close()
+
+    readline.read_history_file(HISTORY)
+    LifeConsoleCmd().cmdloop()
+    readline.write_history_file(HISTORY)
+
 
 if __name__ == '__main__':
-    TurtleShell().cmdloop()
+    main()
+
+
+def dev():
+    cmd.Cmd.do_help
