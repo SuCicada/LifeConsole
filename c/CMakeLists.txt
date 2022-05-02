@@ -5,15 +5,14 @@ set(CMAKE_CXX_STANDARD 14)
 # 开启 cmake 详细信息
 #set(CMAKE_VERBOSE_MAKEFILE ON)
 
-file(GLOB editline_SRC
-        editline/**/**
-        editline/*
+
+file(GLOB SRC
+        src/*
         )
+
 file(GLOB test
         test/*
         )
-
-
 
 
 macro(set_and_echo)
@@ -50,13 +49,19 @@ endmacro()
 #endif()
 
 #message(STATUS "****************** LIB MODULES END *******************")
+set(c_utils_include ${CMAKE_SOURCE_DIR}/lib/c_utils/src)
+set(c_utils_libs ${CMAKE_SOURCE_DIR}/lib/c_utils/libs)
+file(GLOB c_utils_include_files ${c_utils_include}/*.h)
+
 set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
 
 set(LIB_target ${CMAKE_SOURCE_DIR}/lib/target)
 #message(${LIB_target})
 #add_library(STATIC editline)
 # -I
-include_directories(${LIB_target}/include)
+include_directories(${LIB_target}/include
+        ${c_utils_include}
+        )
 
 # -L
 link_directories(${PROJECT_NAME} ${LIB_target}/lib/)
@@ -64,10 +69,11 @@ link_directories(${PROJECT_NAME} ${LIB_target}/lib/)
 #link_libraries(${LIB_target}/lib/libeditline.a)
 
 add_executable(${PROJECT_NAME}
-        main2.c
-        #        ${editline_SRC}
+        ${SRC}
+        ${c_utils_include}
+        ${c_utils_libs}/string-lib.o
         #        ${test}
-        )
+        src/life.h)
 
 # -l
 target_link_libraries(${PROJECT_NAME} libeditline.a)
